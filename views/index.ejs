@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <script>
+      let fileContent = "";
+
+      // Handle file upload
+      function handleFileUpload(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          fileContent = e.target.result;
+          document.getElementById('file-content').textContent = fileContent;
+        };
+
+        reader.readAsText(file);
+      }
+
+      // Save file content to server
+      function saveData() {
+        fetch('/save-data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: fileContent })
+        }).then(response => {
+          if (response.ok) alert('Data saved successfully!');
+        });
+      }
+
+      // Navigate to export page
+      function goToExport() {
+        window.location.href = '/export';
+      }
+    </script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <input type="file" onchange="handleFileUpload(event)" />
+    <pre id="file-content">Uploaded file content will appear here.</pre>
+    <button onclick="saveData()">Save Data</button>
+    <button onclick="goToExport()">Go to Export Page</button>
+  </body>
+</html>
